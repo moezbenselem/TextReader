@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/holo_blue_dark"
+    >
+
+    <ImageView android:id="@+id/splashscreen"
+        android:layout_width="match_parent"
+        android:layout_height="306dp"
+        android:src="@drawable/textreader" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="casual"
+        android:text="Text/Barcode/QR Reader"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="36sp"
+        android:typeface="normal" />
+
+</LinearLayout>

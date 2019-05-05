@@ -37,19 +37,18 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
 
 
-
 public class MainActivity extends AppCompatActivity {
 
     SurfaceView cameraView;
-    TextView textView , tvResult;
-    Button btCam , btGal , btCopy ,btOk , btX ,btScanCam , btScanPic;
-    String result ="";
+    TextView textView, tvResult;
+    Button btCam, btGal, btCopy, btOk, btX, btScanCam, btScanPic;
+    String result = "";
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
     static String event;
     AdView mAdView;
     InterstitialAd mInterstitialAd;
-    Runnable r ;
+    Runnable r;
     BarcodeDetector barcodeDetector;
     Handler h;
 
@@ -148,62 +147,60 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-            btCopy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        btCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(getApplication().CLIPBOARD_SERVICE);
-                    android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", result);
-                    clipboard.setPrimaryClip(clip);
-                    Toast.makeText(getApplicationContext(),"Copied to Clipboard !",Toast.LENGTH_SHORT).show();
-                    r = new Runnable() {
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(getApplication().CLIPBOARD_SERVICE);
+                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", result);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(getApplicationContext(), "Copied to Clipboard !", Toast.LENGTH_SHORT).show();
+                r = new Runnable() {
 
-                        @Override
-                        public void run() {
+                    @Override
+                    public void run() {
 
-                            mInterstitialAd = new InterstitialAd(MainActivity.this);
+                        mInterstitialAd = new InterstitialAd(MainActivity.this);
 
-                            // set the ad unit ID
-                            mInterstitialAd.setAdUnitId("ca-app-pub-4844893835585992/4043754625");
+                        // set the ad unit ID
+                        mInterstitialAd.setAdUnitId("ca-app-pub-4844893835585992/4043754625");
 
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                    .build();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .build();
 
-                            // Load ads into Interstitial Ads
-                            mInterstitialAd.loadAd(adRequest);
+                        // Load ads into Interstitial Ads
+                        mInterstitialAd.loadAd(adRequest);
 
-                            mInterstitialAd.setAdListener(new AdListener() {
-                                public void onAdLoaded() {
-                                    showInterstitial();
-                                }
-                            });
-                        }
-
-                        private void showInterstitial() {
-                            if (mInterstitialAd.isLoaded()) {
-                                mInterstitialAd.show();
+                        mInterstitialAd.setAdListener(new AdListener() {
+                            public void onAdLoaded() {
+                                showInterstitial();
                             }
+                        });
+                    }
+
+                    private void showInterstitial() {
+                        if (mInterstitialAd.isLoaded()) {
+                            mInterstitialAd.show();
                         }
-                    };
+                    }
+                };
 
-                    h = new Handler();
-                    // The Runnable will be executed after the given delay time
-                    h.postDelayed(r, 0); // will be delayed for 1.5 seconds
+                h = new Handler();
+                // The Runnable will be executed after the given delay time
+                h.postDelayed(r, 0);
 
-                }
-            });
+            }
+        });
 
         btGal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                // Show only images, no videos or anything else
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 event = "text";
-                // Always show the chooser (if there are multiple options available)
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
 
 
@@ -237,9 +234,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-}
+    }
 
-    public void capture(){
+    public void capture() {
 
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
@@ -294,14 +291,12 @@ public class MainActivity extends AppCompatActivity {
                 public void receiveDetections(Detector.Detections<TextBlock> detections) {
 
                     final SparseArray<TextBlock> items = detections.getDetectedItems();
-                    if(items.size() != 0)
-                    {
+                    if (items.size() != 0) {
                         textView.post(new Runnable() {
                             @Override
                             public void run() {
                                 StringBuilder stringBuilder = new StringBuilder();
-                                for(int i =0;i<items.size();++i)
-                                {
+                                for (int i = 0; i < items.size(); ++i) {
                                     TextBlock item = items.valueAt(i);
                                     System.out.println(item.getLanguage());
                                     stringBuilder.append(item.getValue());
@@ -319,17 +314,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void captureCode(){
+    public void captureCode() {
 
         BarcodeDetector detector =
                 new BarcodeDetector.Builder(getApplicationContext())
                         .setBarcodeFormats(Barcode.ALL_FORMATS).build();
-        if(!detector.isOperational()){
+        if (!detector.isOperational()) {
             System.out.println("Could not set up the detector!");
             System.out.println("non functional !");
             return;
-        }
-        else if (detector.isOperational()){
+        } else if (detector.isOperational()) {
             System.out.println("functional !");
             textView.setText("");
             cameraSource = new CameraSource.Builder(getApplicationContext(), detector)
@@ -367,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            detector.setProcessor(new Detector.Processor<Barcode>(){
+            detector.setProcessor(new Detector.Processor<Barcode>() {
                 @Override
                 public void release() {
 
@@ -377,13 +371,7 @@ public class MainActivity extends AppCompatActivity {
                 public void receiveDetections(Detector.Detections<Barcode> detections) {
 
                     final SparseArray<Barcode> r = detections.getDetectedItems();
-                    if(r.size() > 0)
-                    {
-                        System.out.println(r.valueAt(0).displayValue);
-                        System.out.println("items sizeeeee ==== "+r.size());
-
-
-
+                    if (r.size() > 0) {
                         btX.post(new Runnable() {
                             @Override
                             public void run() {
@@ -402,16 +390,13 @@ public class MainActivity extends AppCompatActivity {
                         });
 
 
-                    }
-                    else
-                        Toast.makeText(getApplicationContext(),"Cannot scan input !",Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(getApplicationContext(), "Cannot scan input !", Toast.LENGTH_SHORT).show();
                 }
 
                 CameraSource.PictureCallback mPictureCallback = new CameraSource.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] bytes) {
-
-                        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
                         Bitmap mBitmap = BitmapFactory
                                 .decodeByteArray(bytes, 0, bytes.length);
 
@@ -424,18 +409,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    public void scanCodePic(){
+    public void scanCodePic() {
 
         BarcodeDetector detector =
                 new BarcodeDetector.Builder(getApplicationContext())
                         .build();
-
-
-
-
-
-
     }
 
     @Override
@@ -448,10 +426,10 @@ public class MainActivity extends AppCompatActivity {
 
             try {
 
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-                    // Log.d(TAG, String.valueOf(bitmap));
-                if(event.equalsIgnoreCase("text")) {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                // Log.d(TAG, String.valueOf(bitmap));
+                if (event.equalsIgnoreCase("text")) {
                     TextRecognizer txtRec = new TextRecognizer.Builder(getApplicationContext()).build();
                     SparseArray<TextBlock> items = txtRec.detect(frame);
                     StringBuilder stringBuilder = new StringBuilder();
@@ -464,8 +442,7 @@ public class MainActivity extends AppCompatActivity {
                     result = stringBuilder.toString();
                     tvResult.setText(result);
                     btCopy.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     BarcodeDetector detector =
                             new BarcodeDetector.Builder(getApplicationContext())
                                     .build();
@@ -480,10 +457,8 @@ public class MainActivity extends AppCompatActivity {
                             result = thisCode.rawValue;
                             tvResult.setText(thisCode.rawValue.toString());
                             btCopy.setVisibility(View.VISIBLE);
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(),"Cannot scan picture !",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Cannot scan picture !", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
